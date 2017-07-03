@@ -1,4 +1,1 @@
-# Go gRPC Practice
-
-这里需要一个低调的说明。
-
+# Go-gRPC 实践指南
