@@ -1,9 +1,10 @@
 # Protobuf语法
 
-gRPC推荐使用proto3，本节只介绍常用语法，更多高级使用姿势请参考[官方文档](https://developers.google.com/protocol-buffers/)
+gRPC推荐使用proto3，这里只介绍常用语法，更多高级使用姿势请参考[官方文档](https://developers.google.com/protocol-buffers/)
 
 
 ## Message定义
+
 一个message类型定义描述了一个请求或相应的消息格式，可以包含多种类型字段。例如定义一个搜索请求的消息格式，每个请求包含查询字符串、页码、每页数目。
 
 ```
@@ -19,19 +20,27 @@ message SearchRequest {
 
 SearchRequest 定义了三个字段，每个字段声明以分号结尾，可使用双斜线`//`添加注释。
 
-#### 字段类型声明
+
+### 字段类型声明
+
 所有的字段需要前置声明数据类型，上面的示例指定了两个数值类型和一个字符串类型。除了基本的标量类型还有复合类型，如枚举、其它message类型等。
 
-#### 标识符Tags
+
+### 标识符Tags
+
 可以看到，消息的定义中，每个字段都有一个**唯一的数值型标识符**。这些标识符用于标识字段在消息中的二进制格式，使用中的类型不应该随意改动。需要注意的是，[1-15]内的标识在编码时只占用一个字节，包含标识符和字段类型。[16-2047]之间的标识符占用2个字节。建议为频繁出现的消息元素使用[1-15]间的标识符。如果考虑到以后可能或扩展频繁元素，可以预留一些标识符。
 
 最小的标识符可以从1开始，最大到2<sup>29</sup> - 1，或536,870,911。不可以使用[19000－19999]之间的标识符， Protobuf协议实现中预留了这些标识符。在.proto文件中使用这些预留标识号，编译时就会报错。
 
-#### 字段规则
+
+### 字段规则
+
 * repeated：标识字段可以重复任意次，类似数组
 * proto3不支持proto2中的required和optional
 
-#### 添加更多message类型
+
+### 添加更多message类型
+
 一个.proto文件中可以定义多个消息类型，一般用于同时定义多个相关的消息，例如在同一个.proto文件中同时定义搜索请求和响应消息：
 
 ```
@@ -50,10 +59,14 @@ message SearchResponse {
 }
 ```
 
-#### 添加注释
+
+### 添加注释
+
 向.proto文件中添加注释，支持C风格双斜线`//`单行注释
 
-#### 保留字段与标识符
+
+### 保留字段与标识符
+
 可以使用reserved关键字指定保留字段和保留标识符：
 
 ```
@@ -64,7 +77,9 @@ message Foo {
 ```
 注意，不能在一个reserved声明中混合字段名和标识符。
 
-#### `.proto`文件编译结果
+
+### `.proto`文件编译结果
+
 当使用protocol buffer编译器运行`.proto`文件时，编译器将生成所选语言的代码，用于使用在`.proto`文件中定义的消息类型、服务接口约定等。不同语言生成的代码格式不同：
 
 * C++: 每个`.proto`文件生成一个`.h`文件和一个`.cc`文件，每个消息类型对应一个类
@@ -80,6 +95,7 @@ message Foo {
 
 
 ## 数据类型
+
 这里直接引用[官方文档](https://developers.google.com/protocol-buffers/docs/proto3#scalar)的描述：
 
 |.proto | C++ | Java | Python | Go | Ruby | C# |
@@ -112,6 +128,7 @@ message Foo {
 
 
 ## 默认值
+
 * 字符串类型默认为空字符串
 * 字节类型默认为空字节
 * 布尔类型默认false
@@ -120,10 +137,12 @@ message Foo {
 
 针对不同语言的默认值的具体行为参考 [generated code guide](https://developers.google.com/protocol-buffers/docs/reference/overview)
 
+
 ## 枚举(Enum) TODO
 
 
 ## 使用其它Message
+
 ```
 message SearchResponse {
     repeated Result results = 1;
@@ -137,7 +156,9 @@ message Result {
 ```
 message支持嵌套使用，作为另一message中的字段类型
 
-#### 导入定义(import)
+
+### 导入定义(import)
+
 可以使用import语句导入使用其它描述文件中声明的类型
 
 ```
@@ -147,6 +168,7 @@ protocol buffer编译器会在 `-I / --proto_path`参数指定的目录中查找
 
 
 ## Message嵌套
+
 ```
 message SearchResponse {
     message Result {
@@ -182,10 +204,13 @@ message Outer {                // Level 0
     }
 }
 ```
+
+
 ## Message更新 TODO
 
 
 ## Map类型
+
 proto3支持map类型声明:
 
 ```
@@ -202,6 +227,7 @@ map<string, Project> projects = 1;
 
 
 ## 包(Packages)
+
 在`.proto`文件中使用`package`声明包名，避免命名冲突。
 
 ```
@@ -229,6 +255,7 @@ message Foo {
 
 
 ## 定义服务(Service)
+
 如果想要将消息类型用在RPC(远程方法调用)系统中，可以在`.proto`文件中定义一个RPC服务接口，protocol buffer编译器会根据所选择的不同语言生成服务接口代码。例如，想要定义一个RPC服务并具有一个方法，该方法接收`SearchRequest`并返回一个`SearchResponse`，此时可以在`.proto`文件中进行如下定义：
 
 ```
@@ -241,6 +268,7 @@ service SearchService {
 
 
 ## 选项(Options)
+
 在定义.proto文件时可以标注一系列的options。Options并不改变整个文件声明的含义，但却可以影响特定环境下处理方式。完整的可用选项可以查看`google/protobuf/descriptor.proto`.
 
 一些选项是文件级别的，意味着它可以作用于顶层作用域，不包含在任何消息内部、enum或服务定义中。一些选项是消息级别的，可以用在消息定义的内部。当然有些选项可以作用在字段、enum类型、enum值、服务类型及服务方法中。但是到目前为止，并没有一种有效的选项能作用于这些类型。
@@ -253,19 +281,23 @@ service SearchService {
 
 
 ## 基本规范
-##### 描述文件以`.proto`做为文件后缀，除结构定义外的语句以分号结尾
+
+### 描述文件以`.proto`做为文件后缀，除结构定义外的语句以分号结尾
+
 * 结构定义包括：message、service、enum
 * rpc方法定义结尾的分号可有可无
 
-##### Message命名采用驼峰命名方式，字段命名采用小写字母加下划线分隔方式
+
+### Message命名采用驼峰命名方式，字段命名采用小写字母加下划线分隔方式
 	
 ```
 message SongServerRequest {
     required string song_name = 1;
 }
 ```
-	
-##### Enums类型名采用驼峰命名方式，字段命名采用大写字母加下划线分隔方式
+
+
+### Enums类型名采用驼峰命名方式，字段命名采用大写字母加下划线分隔方式
 
 ```
 enum Foo {
@@ -273,13 +305,13 @@ enum Foo {
     SECOND_VALUE = 2;
 }
 ```
-##### Service与rpc方法名统一采用驼峰式命名
 
 
-## 详解Go语言编译结果 TODO
-**message对应golang中的struct，编译生成go代码后，字段名会转换为驼峰式**
+### Service名称与RPC方法名统一采用驼峰式命名
+
 
 ## 编译
+
 通过定义好的`.proto`文件生成Java, Python, C++, Go, Ruby, JavaNano, Objective-C, or C# 代码，需要安装编译器`protoc`。参考Github项目[google/protobuf](https://github.com/google/protobuf)安装编译器.Go语言需要同时安装一个特殊的插件：[golang/protobuf](https://github.com/golang/protobuf/)。
 
 运行命令：
@@ -300,6 +332,7 @@ protoc --proto_path=IMPORT_PATH --cpp_out=DST_DIR --java_out=DST_DIR --python_ou
 
 
 ## 更多
+
 * Any 消息类型
 * Oneof 字段
 * 自定义Options

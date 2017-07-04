@@ -78,6 +78,7 @@ Trace listen on 50051
 # 进入client目录执行一次客户端请求     
 ```
 
+
 ### 服务端事件查看
 
 访问：localhost:50051/debug/events，结果如图：
@@ -85,6 +86,7 @@ Trace listen on 50051
 ![](/assets/grpc_trace_events.png)
 
 可以看到服务端注册的服务和服务正常启动的事件信息，默认trace中只有这一个事件
+
 
 ### 请求日志信息查看
 

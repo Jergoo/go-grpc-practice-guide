@@ -19,4 +19,4 @@
     * [Python](chapter3/python.md)
     * [Ruby](chapter3/ruby.md)
     * [objective-c示例](chapter2/oc.md)
-* [参考](reference.md)
+* [参考资源](reference.md)

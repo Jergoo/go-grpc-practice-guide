@@ -5,6 +5,7 @@
 首先需要准备证书，在hello目录新建keys目录用于存放证书文件。
 
 ## 证书制作
+
 ##### 制作私钥 (.key)
 
 ```sh
@@ -16,11 +17,16 @@ openssl genrsa -out server.key 2048
 openssl ecparam -genkey -name secp384r1 -out server.key
 ```
 
+
 ##### 自签名公钥(x509) (PEM-encodings `.pem`|`.crt`) 
+
 ```sh
 openssl req -new -x509 -sha256 -key server.key -out server.pem -days 3650
 ```
+
+
 ##### 自定义信息
+
 ```
 -----
 Country Name (2 letter code) [AU]:CN
@@ -53,6 +59,7 @@ example/
 
 
 ## 示例代码
+
 `proto/helloworld.proto`及`proto/hello.pb.go`文件不需要改动
 
 修改服务端代码：server/main.go

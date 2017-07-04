@@ -11,12 +11,14 @@ etcd3改用grpc后为了兼容原来的api，同时要提供http/json方式的AP
 下面我们就直接实战吧。基于hello-tls项目扩展，客户端改动不大，服务端和proto改动较大。
 
 ## 安装grpc-gateway
+
 ```sh
 go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 
 ```
 
 ## 项目结构：
+
 ```
 $GOPATH/src/grpc-go-practice/
 
@@ -220,6 +222,7 @@ func main() {
 * 开启http服务，handler指定给grpcHandlerFunc方法
 
 注意：必须开启HTTPS
+
 
 ## 运行结果
 
