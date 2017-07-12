@@ -1,6 +1,6 @@
 # gRPC HTTP协议转换
 
-正当有这个需求的时候，就看到了这个实现姿势。源自coreos的一篇博客，转载到了grpc官方博客[gRPC with REST and Open APIs](http://www.grpc.io/blog/coreos)。
+方法源自coreos的一篇博客，转载到了grpc官方博客[gRPC with REST and Open APIs](http://www.grpc.io/blog/coreos)。
 
 etcd3改用grpc后为了兼容原来的api，同时要提供http/json方式的API，为了满足这个需求，要么开发两套API，要么实现一种转换机制，他们选择了后者，而我们选择跟随他们的脚步。
 
@@ -213,7 +213,7 @@ func main() {
 
 ```
 
-好吧，这么大一坨。核心就是开启了一个http server，收到请求后检查请求是grpc还是http，然后决定是由grpc服务直接处理还是交给gateway做转发处理。其中`grpcHandlerFunc`函数负责处理决定用哪个handler处理请求，这个方法是直接Copy过来用的，原文的注释说他们也是从别处Copy的。感谢贡献者。
+好吧，这么大一坨。核心就是开启了一个http server，收到请求后检查请求是grpc还是http，然后决定是由grpc服务直接处理还是交给gateway做转发处理。其中`grpcHandlerFunc`函数负责处理决定用哪个handler处理请求。
 
 基本流程：
 
@@ -251,5 +251,3 @@ curl -X POST -k https://localhost:50052/example/echo -d '{"name": "gRPC-HTTP is 
 
 > {"message":"Hello gRPC-HTTP is working!."}
 ```
-
-为什么是hello-http-2，因为1是个不完整的实现姿势，可以不用https，但是需要分别开启grpc服务和http服务，这里不做说明了。
