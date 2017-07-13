@@ -7,6 +7,7 @@
     * [Protobuf⇢Go转换](chapter1/protobuf-go.md)
 * [实践](chapter2/README.md)
     * [Hello gRPC](chapter2/hello-grpc.md)
+    * [流式调用](chapter2/stream.md)
     * [认证](chapter2/auth.md)
     * [拦截器](chapter2/interceptor.md)
     * [内置Trace](chapter2/trace.md)
