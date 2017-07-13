@@ -1,6 +1,6 @@
 # Hello gRPC
 
-按照惯例，这里从一个Hello项目开始，本项目定义了一个Hello Service，客户端发送包含字符串名字的请求，服务端返回Hello消息。
+按照惯例，这里也从一个Hello项目开始，本项目定义了一个Hello Service，客户端发送包含字符串名字的请求，服务端返回Hello消息。
 
 流程： 
 

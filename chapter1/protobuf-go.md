@@ -1,4 +1,4 @@
-# Protobuf Go语言说明
+# Protobuf⇢Go转换
 
 这里使用一个测试文件对照说明常用结构的protobuf到golang的转换。只说明关键部分代码，详细内容请查看完整文件。示例文件在`proto/test`目录下。
 
@@ -39,6 +39,7 @@ message Test {
         string sex = 1;
     }
     Child child = 9;
+	map<string, string> dict = 10;
 }
 ```
 
@@ -64,6 +65,7 @@ type Test struct {
 	Char   []byte      `protobuf:"bytes,7,opt,name=char,proto3" json:"char,omitempty"`
 	Status Test_Status `protobuf:"varint,8,opt,name=status,enum=test.Test_Status" json:"status,omitempty"`
 	Child  *Test_Child `protobuf:"bytes,9,opt,name=child" json:"child,omitempty"`
+	Dict   map[string]string `protobuf:"bytes,10,rep,name=dict" json:"dict,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 }
 
 // Child 子结构
@@ -71,7 +73,6 @@ type Test_Child struct {
 	Sex string `protobuf:"bytes,1,opt,name=sex" json:"sex,omitempty"`
 }
 ```
-
 除了会生成对应的结构外，还会有些工具方法，如字段的getter:
 
 ```go

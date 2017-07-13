@@ -409,7 +409,7 @@ protoc --proto_path=IMPORT_PATH --cpp_out=DST_DIR --java_out=DST_DIR --python_ou
 * [Javascript Generated Code Guide](https://developers.google.com/protocol-buffers/docs/reference/javascript-generated)
 * [PHP Generated Code Guide](https://developers.google.com/protocol-buffers/docs/reference/php-generated)
 
-吐槽: 照着官方文档一步步操作不一定成功哦！
+> 吐槽: 照着官方文档一步步操作不一定成功哦！
 
 
 ## 更多

@@ -2,9 +2,9 @@
 
 * [介绍](README.md)
     * [gRPC简介](chapter1/intro.md)
-    * [环境安装](chapter1/install.md)
+    * [安装](chapter1/install.md)
     * [Protobuf语法](chapter1/protobuf.md)
-    * [Protobuf-Go说明](chapter1/protobuf-go.md)
+    * [Protobuf⇢Go转换](chapter1/protobuf-go.md)
 * [实践](chapter2/README.md)
     * [Hello gRPC](chapter2/hello-grpc.md)
     * [认证](chapter2/auth.md)
