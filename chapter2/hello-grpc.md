@@ -12,8 +12,6 @@
 **项目结构：**
 
 ```
-$GOPATH/src/github.com/Jergoo/go-grpc-example/
-
 |—— hello/
 	|—— client/
     	|—— main.go   // 客户端
@@ -77,7 +75,7 @@ import (
 	"fmt"
 	"net"
 
-	pb "github.com/Jergoo/go-grpc-example/proto/hello" // 引入编译生成的包
+	pb "github.com/jergoo/go-grpc-example/proto/hello" // 引入编译生成的包
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
@@ -135,7 +133,7 @@ Listen on 127.0.0.1:50052  //服务端已开启并监听50052端口
 package main
 
 import (
-	pb "github.com/Jergoo/go-grpc-example/proto/hello" // 引入proto包
+	pb "github.com/jergoo/go-grpc-example/proto/hello" // 引入proto包
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -180,6 +178,6 @@ $ go run main.go
 Hello gRPC.    // 接收到服务端响应
 ```
 
-如果你收到了"Hello gRPC"的回复，恭喜你已经会使用go-gRPC了。
+如果你收到了"Hello gRPC"的回复，恭喜你已经会使用github.com/jergoo/go-grpc-example/proto/hello了。
 
 > 建议到这里仔细看一看hello.pb.go文件中的内容，对比hello.proto文件，理解protobuf中的定义转换为golang后的结构。

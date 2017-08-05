@@ -11,7 +11,7 @@ import (
 	"net"
 	"net/http"
 
-	pb "git.vodjk.com/go-grpc/example/proto" // 引入编译生成的包
+	pb "github.com/jergoo/go-grpc-example/proto/hello" // 引入编译生成的包
 
 	"golang.org/x/net/context"
 	"golang.org/x/net/trace"  // 引入trace包
@@ -69,8 +69,8 @@ func startTrace() {
 
 运行：
 
-```
-go run main.go
+```sh
+$ go run main.go
 
 Listen on 127.0.0.1:50052                                                       
 Trace listen on 50051

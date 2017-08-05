@@ -13,16 +13,13 @@ etcd3改用grpc后为了兼容原来的api，同时要提供http/json方式的AP
 ## 安装grpc-gateway
 
 ```sh
-go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
+$ go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 
 ```
 
 ## 项目结构：
 
 ```
-$GOPATH/src/grpc-go-practice/
-
-example/
 |—— hello-http-2/
 	|—— client/
     	|—— main.go   // 客户端
@@ -49,7 +46,7 @@ example/
 
 **proto/hello_http.proto**
 
-```
+```protobuf
 syntax = "proto3";  // 指定proto版本
 
 package proto;     // 指定包名
@@ -83,23 +80,23 @@ message HelloHttpReply {
 **编译proto**
 
 ```sh
-cd $GOPATH/src/grpc-go-practice/example/hello-http-2/proto
+$ cd $GOPATH/src/grpc-go-practice/example/hello-http-2/proto
 
 # 编译google.api
-protoc -I . --go_out=plugins=grpc,Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor:. google/api/*.proto
+$ protoc -I . --go_out=plugins=grpc,Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor:. google/api/*.proto
 
 # 编译hello_http.proto
-protoc -I . --go_out=plugins=grpc,Mgoogle/api/annotations.proto=git.vodjk.com/go-grpc/example/proto/google/api:. ./*.proto
+$ protoc -I . --go_out=plugins=grpc,Mgoogle/api/annotations.proto=github.com/jergoo/go-grpc-example/proto/google/api:. ./*.proto
 
 # 编译hello_http.proto gateway
-protoc --grpc-gateway_out=logtostderr=true:. ./hello_http.proto
+$ protoc --grpc-gateway_out=logtostderr=true:. ./hello_http.proto
 ```
 
 注意这里需要编译google/api中的两个proto文件，同时在编译hello_http.proto时指定引入包名，最后使用grpc-gateway编译生成`hello_http_pb.gw.go`文件，这个文件就是用来做协议转换的，查看文件可以看到里面生成的http handler，处理上面定义的路由"example/echo"接收POST参数，调用HelloHTTP服务的客户端请求grpc服务并响应结果。
 
 **server/main.go**
 
-```
+```golang
 package main
 
 import (
@@ -115,7 +112,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	pb "git.vodjk.com/go-grpc/example/proto"
+	pb "github.com/jergoo/go-grpc-example/proto"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 )
@@ -228,26 +225,26 @@ func main() {
 
 开启服务：
 
-```
+```sh
 # hello-http-2/server
-go run main.go
+$ go run main.go
 
-> grpc and https on port: 50052    
+grpc and https on port: 50052    
 ```
 
 调用grpc客户端：
 
-```
+```sh
 # hello-http-2/client
-go run main.go
+$ go run main.go
 
-> Hello gRPC.
+Hello gRPC.
 ```
 
 请求https：
 
-```
-curl -X POST -k https://localhost:50052/example/echo -d '{"name": "gRPC-HTTP is working!"}'
+```sh
+$ curl -X POST -k https://localhost:50052/example/echo -d '{"name": "gRPC-HTTP is working!"}'
 
-> {"message":"Hello gRPC-HTTP is working!."}
+{"message":"Hello gRPC-HTTP is working!."}
 ```

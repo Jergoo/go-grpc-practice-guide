@@ -12,7 +12,7 @@ package main
 import (
 	"net"
 
-	pb "git.vodjk.com/go-grpc/example/proto"
+	pb "github.com/jergoo/go-grpc-example/proto/hello"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -109,16 +109,16 @@ func main() {
 
 运行：
 
-```
-go run main.go
+```sh
+$ go run main.go
 
 Listen on 50052 with TLS + Token
 ```
 
 运行客户端程序 client/main.go：
 
-```
-go run main.go
+```sh
+$ go run main.go
 
 // 认证成功结果
 Hello gRPC
@@ -130,7 +130,7 @@ rpc error: code = 16 desc = Token认证信息无效: appID=101010, appKey=i am n
 
 运行结果和hello-token项目一样，简单不，只需要在实例化server前注册需要的interceptor，就可以轻松解决那个蛋疼的问题，想注册几个就注册几个。
 
-**项目推荐：**  [go-grpc-middleware](https://github.com/mwitkow/go-grpc-middleware)
+**项目推荐：**  [github.com/jergoo/go-grpc-example/proto/hello-middleware](https://github.com/mwitkow/github.com/jergoo/go-grpc-example/proto/hello-middleware)
 
 这个项目对interceptor进行了封装，支持多个拦截器的链式组装，对于需要多种处理的地方使用起来会更方便些。
 

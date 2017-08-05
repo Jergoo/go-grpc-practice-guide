@@ -12,18 +12,18 @@
 
 ```sh
 # Key considerations for algorithm "RSA" ≥ 2048-bit
-openssl genrsa -out server.key 2048
+$ openssl genrsa -out server.key 2048
     
 # Key considerations for algorithm "ECDSA" ≥ secp384r1
 # List ECDSA the supported curves (openssl ecparam -list_curves)
-openssl ecparam -genkey -name secp384r1 -out server.key
+$ openssl ecparam -genkey -name secp384r1 -out server.key
 ```
 
 
 #### 自签名公钥(x509) (PEM-encodings `.pem`|`.crt`) 
 
 ```sh
-openssl req -new -x509 -sha256 -key server.key -out server.pem -days 3650
+$ openssl req -new -x509 -sha256 -key server.key -out server.pem -days 3650
 ```
 
 #### 自定义信息
@@ -42,9 +42,6 @@ Email Address []:xxx@xxx.com
 ### 目录结构
 
 ```
-$GOPATH/src/grpc-go-practice/
-
-example/
 |—— hello-tls/
 	|—— client/
     	|—— main.go   // 客户端
@@ -65,13 +62,13 @@ example/
 
 修改服务端代码：server/main.go
 
-```
+```golang
 package main
 
 import (
 	"net"
 
-	pb "go-grpc-practice/example/proto"
+	pb "github.com/jergoo/go-grpc-example/proto/hello"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -122,8 +119,8 @@ func main() {
 ```
 运行：
 
-```
-go run main.go
+```sh
+$ go run main.go
 
 Listen on 127.0.0.1:50052 with TLS
 ```
@@ -132,11 +129,11 @@ Listen on 127.0.0.1:50052 with TLS
 
 客户端添加TLS认证：client/main.go
 
-```
+```golang
 package main
 
 import (
-	pb "go-grpc-practice/example/proto" // 引入proto包
+	pb "github.com/jergoo/go-grpc-example/proto/hello" // 引入proto包
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -180,8 +177,8 @@ func main() {
 ```
 运行：
 
-```
-go run main.go
+```sh
+$ go run main.go
 
 Hello gRPC
 ```
@@ -196,9 +193,6 @@ Hello gRPC
 ### 目录结构
 
 ```
-$GOPATH/src/grpc-go-practice/
-
-example/
 |—— hello-token/
 	|—— client/
     	|—— main.go   // 客户端
@@ -217,11 +211,11 @@ example/
 
 先修改客户端实现：client/main.go
 
-```
+```golang
 package main
 
 import (
-	pb "go-grpc-practice/example/proto" // 引入proto包
+	pb "github.com/jergoo/go-grpc-example/proto/hello" // 引入proto包
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -299,14 +293,14 @@ func main() {
 
 修改server/main.go中的SayHello方法：
 
-```
+```golang
 package main
 
 import (
 	"fmt"
 	"net"
 
-	pb "go-grpc-practice/example/proto"
+	pb "github.com/jergoo/go-grpc-example/proto/hello"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -381,10 +375,11 @@ func main() {
 }
 
 ```
+
 运行：
 
-```
-go run main.go
+```sh
+$ go run main.go
 
 Listen on 50052 with TLS + Token
 ```
@@ -392,7 +387,7 @@ Listen on 50052 with TLS + Token
 运行客户端程序 client/main.go：
 
 ```
-go run main.go
+$ go run main.go
 
 // 认证成功结果
 Hello gRPC
