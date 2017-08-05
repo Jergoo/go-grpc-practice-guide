@@ -1,7 +1,10 @@
 {
     "title": "Go-gRPC 实践指南",
-    "description": "",
+    "description": "Go-gRPC实践指南",
     "language": "zh",
-    "plugins": [],
+    "plugins": [
+        "splitter",
+        "anchor-navigation-ex"
+    ],
     "gitbook": ">= 3.0.0"
 }
