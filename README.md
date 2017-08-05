@@ -13,6 +13,28 @@
 
 **众人拾柴火焰高，我一个人的能力和时间是有限的，欢迎有心人加入一起完成这个小事业~**
 
+## 进度
+
+* 介绍
+    * [x] gRPC简介
+    * [x] 安装
+    * [x] Protobuf语法
+    * [x] Protobuf⇢Go转换
+* 实践
+    * [ ] Hello gRPC
+    * [ ] 流式调用
+    * [ ] 认证
+    * [ ] 拦截器
+    * [ ] 内置Trace
+    * [ ] 负载均衡
+    * [ ] 连接管理
+* gRPC生态
+    * [ ] Http转换
+* 多语言支持
+    * [ ] Java
+    * [ ] PHP
+    * [ ] Python
+    * [ ] Node.js
 
 ## 推广
 
@@ -30,5 +52,3 @@
 * [Golang gRPC实践 连载五 拦截器 Interceptor](https://segmentfault.com/a/1190000007997759)
 * [Golang gRPC实践 连载六 内置Trace](https://segmentfault.com/a/1190000008087436)  
 * [Golang gRPC实践 连载七 http转换](https://segmentfault.com/a/1190000008106582)
-
-
