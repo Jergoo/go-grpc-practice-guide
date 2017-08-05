@@ -6,5 +6,11 @@
         "splitter",
         "anchor-navigation-ex"
     ],
+    "pluginsConfig": {
+        "anchor-navigation-ex": {
+            "showLevel": false,
+            "multipleH1": false
+        }
+    },
     "gitbook": ">= 3.0.0"
 }
