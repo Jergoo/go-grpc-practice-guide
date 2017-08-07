@@ -2,9 +2,27 @@
 
 grpc服务端提供了interceptor功能，可以在服务端接收到请求时优先对请求中的数据做一些处理后再转交给指定的服务处理并响应，功能类似middleware，很适合在这里处理验证、日志等流程。
 
-在自定义Token认证的示例中，认证信息是由每个服务中的方法处理并认证的，如果有大量的接口方法，这种姿势就太不优雅了，每个接口实现都要先处理认证信息。这个时候interceptor就可以用来解决了这个问题，在请求被转到具体接口之前处理认证信息，一处认证，到处无忧，看代码吧，修改hello_token项目的服务端实现：
+在自定义Token认证的示例中，认证信息是由每个服务中的方法处理并认证的，如果有大量的接口方法，这种姿势就太不优雅了，每个接口实现都要先处理认证信息。这个时候interceptor就可以用来解决了这个问题，在请求被转到具体接口之前处理认证信息，一处认证，到处无忧，看代码吧，修改hello_token项目服务端实现：
 
-> hello_interceptor/server/main.go
+
+## 目录结构
+
+```
+|—— hello_interceptor/
+	|—— client/
+    	|—— main.go   // 客户端
+	|—— server/
+    	|—— main.go   // 服务端
+|—— keys/             // 证书目录
+	|—— server.key
+	|—— server.pem
+|—— proto/
+	|—— hello/
+		|—— hello.proto   // proto描述文件
+		|—— hello.pb.go   // proto编译后文件
+```
+
+## 示例代码
 
 ```go
 package main

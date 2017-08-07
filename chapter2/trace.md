@@ -1,8 +1,22 @@
 # 内置Trace
 
-grpc内置了客户端和服务端的请求追踪，基于`golang.org/x/net/trace`包实现，可惜没有提供自定义接口，当前只能查看基本的事件日志和请求日志，对于基本的请求状态查看调试也是很有帮助的，客户端与服务端基本一致，这里以服务端开启trace为例，修改hello项目的server代码：
+grpc内置了客户端和服务端的请求追踪，基于`golang.org/x/net/trace`包实现，可惜没有提供自定义接口，当前只能查看基本的事件日志和请求日志，对于基本的请求状态查看调试也是很有帮助的，客户端与服务端基本一致，这里以服务端开启trace为例，修改hello项目服务端代码：
 
-> hello_trace/server/main.go
+## 目录结构
+
+```
+|—— hello_trace/
+	|—— client/
+    	|—— main.go   // 客户端
+	|—— server/
+    	|—— main.go   // 服务端
+|—— proto/
+	|—— hello/
+		|—— hello.proto   // proto描述文件
+		|—— hello.pb.go   // proto编译后文件
+```
+
+## 示例代码
 
 ```go
 package main
