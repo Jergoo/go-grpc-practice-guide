@@ -1,20 +1,21 @@
 # 内置Trace
 
-grpc默认提供了客户端和服务端的trace日志，可惜没有提供自定义接口，当前只能查看基本的事件日志和请求日志，对于基本的请求状态查看也是很有帮助的，客户端与服务端基本一致，这里已服务端开启trace为例，修改hello项目的server代码：
+grpc内置了客户端和服务端的请求追踪，基于`golang.org/x/net/trace`包实现，可惜没有提供自定义接口，当前只能查看基本的事件日志和请求日志，对于基本的请求状态查看调试也是很有帮助的，客户端与服务端基本一致，这里以服务端开启trace为例，修改hello项目的server代码：
 
-server/main.go
+> hello_trace/server/main.go
 
 ```go
 package main
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 
 	pb "github.com/jergoo/go-grpc-example/proto/hello" // 引入编译生成的包
 
 	"golang.org/x/net/context"
-	"golang.org/x/net/trace"  // 引入trace包
+	"golang.org/x/net/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 )
@@ -27,12 +28,13 @@ const (
 // 定义helloService并实现约定的接口
 type helloService struct{}
 
-// HelloService ...
+// HelloService Hello服务
 var HelloService = helloService{}
 
-func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	resp := new(pb.HelloReply)
-	resp.Message = "Hello " + in.Name + "."
+// SayHello 实现Hello服务接口
+func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloResponse, error) {
+	resp := new(pb.HelloResponse)
+	resp.Message = fmt.Sprintf("Hello %s.", in.Name)
 
 	return resp, nil
 }
@@ -63,7 +65,6 @@ func startTrace() {
 	go http.ListenAndServe(":50051", nil)
 	grpclog.Println("Trace listen on 50051")
 }
-
 ```
 这里我们开启一个http服务监听50051端口，用来查看grpc请求的trace信息
 
@@ -79,19 +80,19 @@ Trace listen on 50051
 ```
 
 
-### 服务端事件查看
+## 服务端事件查看
 
 访问：localhost:50051/debug/events，结果如图：
 
-![](/assets/grpc_trace_events.png)
+![](/assets/grpc_trace_events.jpg)
 
-可以看到服务端注册的服务和服务正常启动的事件信息，默认trace中只有这一个事件
+可以看到服务端注册的服务和服务正常启动的事件信息。
 
 
-### 请求日志信息查看
+## 请求日志信息查看
 
 访问：localhost:50051/debug/requests，结果如图：
 
-![](/assets/grpc_trace_requests.png)
+![](/assets/grpc_trace_requests.jpg)
 
-这里可以显示最近的请求状态，包括请求的服务、参数、耗时、响应，对于简单的状态查看还是很方便的，默认值显示最近10条记录，不可以修改。
+这里可以显示最近的请求状态，包括请求的服务、参数、耗时、响应，对于简单的状态查看还是很方便的，默认值显示最近10条记录。
