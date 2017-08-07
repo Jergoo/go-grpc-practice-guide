@@ -1,10 +1,20 @@
 # 认证
 
+gRPC默认内置了两种认证方式：
+
+* SSL/TLS认证方式
+
+* 基于Token的认证方式
+
+同时，gRPC提供了接口用于扩展自定义认证方式
+
+
 ## TLS认证示例
 
 这里直接扩展hello项目，实现TLS认证机制
 
 首先需要准备证书，在hello目录新建keys目录用于存放证书文件。
+
 
 ### 证书制作
 
@@ -26,9 +36,10 @@ $ openssl ecparam -genkey -name secp384r1 -out server.key
 $ openssl req -new -x509 -sha256 -key server.key -out server.pem -days 3650
 ```
 
+
 #### 自定义信息
 
-```
+```sh
 -----
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:XxXx
@@ -38,6 +49,7 @@ Organizational Unit Name (eg, section) []:Dev
 Common Name (e.g. server FQDN or YOUR name) []:server name
 Email Address []:xxx@xxx.com
 ```
+
 
 ### 目录结构
 
@@ -51,8 +63,9 @@ Email Address []:xxx@xxx.com
 	|—— server.key
 	|—— server.pem
 |—— proto/
-	|—— hello.proto   // proto描述文件
-	|—— hello.pb.go   // proto编译后文件
+	|—— hello/
+		|—— hello.proto   // proto描述文件
+		|—— hello.pb.go   // proto编译后文件
 ```
 
 
@@ -66,6 +79,7 @@ Email Address []:xxx@xxx.com
 package main
 
 import (
+	"fmt"
 	"net"
 
 	pb "github.com/jergoo/go-grpc-example/proto/hello"
@@ -84,12 +98,13 @@ const (
 // 定义helloService并实现约定的接口
 type helloService struct{}
 
-// HelloService ...
+// HelloService Hello服务
 var HelloService = helloService{}
 
-func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	resp := new(pb.HelloReply)
-	resp.Message = "Hello " + in.Name + "."
+// SayHello 实现Hello服务接口
+func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloResponse, error) {
+	resp := new(pb.HelloResponse)
+	resp.Message = fmt.Sprintf("Hello %s.", in.Name)
 
 	return resp, nil
 }
@@ -97,7 +112,7 @@ func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.He
 func main() {
 	listen, err := net.Listen("tcp", Address)
 	if err != nil {
-		grpclog.Fatalf("failed to listen: %v", err)
+		grpclog.Fatalf("Failed to listen: %v", err)
 	}
 
 	// TLS认证
@@ -152,29 +167,27 @@ func main() {
 	if err != nil {
 		grpclog.Fatalf("Failed to create TLS credentials %v", err)
 	}
-	conn, err := grpc.Dial(Address, grpc.WithTransportCredentials(creds))
 
+	conn, err := grpc.Dial(Address, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		grpclog.Fatalln(err)
 	}
-
 	defer conn.Close()
 
 	// 初始化客户端
 	c := pb.NewHelloClient(conn)
 
 	// 调用方法
-	reqBody := new(pb.HelloRequest)
-	reqBody.Name = "gRPC"
-	r, err := c.SayHello(context.Background(), reqBody)
-
+	req := &pb.HelloRequest{Name: "gRPC"}
+	res, err := c.SayHello(context.Background(), req)
 	if err != nil {
 		grpclog.Fatalln(err)
 	}
 
-	grpclog.Println(r.Message)
+	grpclog.Println(res.Message)
 }
 ```
+
 运行：
 
 ```sh
@@ -193,7 +206,7 @@ Hello gRPC
 ### 目录结构
 
 ```
-|—— hello-token/
+|—— hello_token/
 	|—— client/
     	|—— main.go   // 客户端
 	|—— server/
@@ -202,8 +215,9 @@ Hello gRPC
 	|—— server.key
 	|—— server.pem
 |—— proto/
-	|—— hello.proto   // proto描述文件
-	|—— hello.pb.go   // proto编译后文件
+	|—— hello/
+		|—— hello.proto   // proto描述文件
+		|—— hello.pb.go   // proto编译后文件
 ```
 
 
@@ -234,6 +248,7 @@ const (
 // customCredential 自定义认证
 type customCredential struct{}
 
+// GetRequestMetadata 实现自定义认证接口
 func (c customCredential) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
 	return map[string]string{
 		"appid":  "101010",
@@ -241,12 +256,9 @@ func (c customCredential) GetRequestMetadata(ctx context.Context, uri ...string)
 	}, nil
 }
 
+// RequireTransportSecurity 自定义认证是否开启TLS
 func (c customCredential) RequireTransportSecurity() bool {
-	if OpenTLS {
-		return true
-	}
-
-	return false
+	return OpenTLS
 }
 
 func main() {
@@ -279,17 +291,17 @@ func main() {
 	c := pb.NewHelloClient(conn)
 
 	// 调用方法
-	reqBody := new(pb.HelloRequest)
-	reqBody.Name = "gRPC"
-	r, err := c.SayHello(context.Background(), reqBody)
+	req := &pb.HelloRequest{Name: "gRPC"}
+	res, err := c.SayHello(context.Background(), req)
 	if err != nil {
 		grpclog.Fatalln(err)
 	}
 
-	grpclog.Println(r.Message)
+	grpclog.Println(res.Message)
 }
 ```
 这里我们定义了一个`customCredential`结构，并实现了两个方法`GetRequestMetadata`和`RequireTransportSecurity`。这是gRPC提供的自定义认证方式，每次RPC调用都会传输认证信息。`customCredential`其实是实现了`grpc/credential`包内的`PerRPCCredentials`接口。每次调用，token信息会通过请求的metadata传输到服务端。下面具体看一下服务端如何获取metadata中的信息。
+
 
 修改server/main.go中的SayHello方法：
 
@@ -321,7 +333,8 @@ type helloService struct{}
 // HelloService ...
 var HelloService = helloService{}
 
-func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+// SayHello 实现Hello服务接口
+func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloResponse, error) {
 	// 解析metada中的信息并验证
 	md, ok := metadata.FromContext(ctx)
 	if !ok {
@@ -345,7 +358,7 @@ func (h helloService) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.He
 		return nil, grpc.Errorf(codes.Unauthenticated, "Token认证信息无效: appid=%s, appkey=%s", appid, appkey)
 	}
 
-	resp := new(pb.HelloReply)
+	resp := new(pb.HelloResponse)
 	resp.Message = fmt.Sprintf("Hello %s.\nToken info: appid=%s,appkey=%s", in.Name, appid, appkey)
 
 	return resp, nil
@@ -373,8 +386,9 @@ func main() {
 
 	s.Serve(listen)
 }
-
 ```
+
+服务端可以从`context`中获取每次请求的metadata，从中读取客户端发送的token信息并验证有效性。
 
 运行：
 
@@ -393,7 +407,8 @@ $ go run main.go
 Hello gRPC
 Token info: appid=101010,appkey=i am key
 
-// 认证失败结果：
+// 修改key验证认证失败结果：
 rpc error: code = 16 desc = Token认证信息无效: appID=101010, appKey=i am not key
 ```
 
+`google.golang.org/grpc/credentials/oauth`包已实现了用于Google API的oauth和jwt验证的方法，使用方法可以参考[官方文档](https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-auth-support.md)。在实际应用中，我们可以根据自己的业务需求实现合适的验证方式。

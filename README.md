@@ -21,13 +21,12 @@
     * [x] Protobuf语法
     * [x] Protobuf⇢Go转换
 * 实践
-    * [ ] Hello gRPC
-    * [ ] 流式调用
-    * [ ] 认证
+    * [x] Hello gRPC
+    * [x] 认证
     * [ ] 拦截器
+    * [ ] 流式传输
     * [ ] 内置Trace
     * [ ] 负载均衡
-    * [ ] 连接管理
 * gRPC生态
     * [ ] Http转换
 * 多语言支持
