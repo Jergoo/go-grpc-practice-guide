@@ -1,4 +1,4 @@
-# gRPC HTTP协议转换
+# HTTP网关
 
 方法源自coreos的一篇博客，转载到了grpc官方博客[gRPC with REST and Open APIs](http://www.grpc.io/blog/coreos)。
 
