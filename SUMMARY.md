@@ -14,7 +14,6 @@
     * [负载均衡](chapter2/load-balancer.md)
 * [gRPC生态](chapter3/README.md)
     * [Http网关](chapter3/gateway.md)
-    * [中间件](chapter3/middleware.md)
 * [多语言支持](chapter4/README.md)
     * [Java](chapter4/java.md)
     * [PHP](chapter4/php.md)
