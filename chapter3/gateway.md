@@ -16,7 +16,7 @@ $ go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 
 ```
 
-## 项目结构：
+## 目录结构
 
 ```
 |—— hello_http/
