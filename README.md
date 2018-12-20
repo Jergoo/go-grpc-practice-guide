@@ -1,4 +1,4 @@
-# Go-gRPC 实践指南
+# Go-gRPC 入门实践
 
 本项目是segmentfault上连载的 **Golang gRPC实践** 系列文章的重新整理版本，简单调整了目录结构，完善了原有的部分内容并重新整理了示例代码，计划介绍更多的gRPC实践及生态的用法和多语言支持。内容中的示例代码都放在项目 **[go-grpc-example](https://github.com/jergoo/go-grpc-example)** 内，如无特殊说明，内容的源码的目录说说明将以此项目为根目录。
 
