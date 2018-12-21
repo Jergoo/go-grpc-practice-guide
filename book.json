@@ -1,6 +1,6 @@
 {
-    "title": "Go-gRPC 实践指南",
-    "description": "Go-gRPC实践指南",
+    "title": "Go-gRPC 入门实践",
+    "description": "Go-gRPC 入门实践",
     "language": "zh",
     "plugins": [
         "splitter",
